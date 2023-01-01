@@ -1,6 +1,7 @@
 const express =require('express');
 const app = express();
 const productData =require('./data/productData.json');
+const userData = require('./data/userData.json')
 
 app.get('/products',(req,res) =>{
     const page =parseInt(req.query.page);
