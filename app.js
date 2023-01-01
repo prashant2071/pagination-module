@@ -23,7 +23,7 @@ app.get('/users',paginatedResult(userData) ,(req,res) =>{
     //     limit:limit
     // }}
     // results.results= userData.slice(startIndex,endIndex);
-    // res.json(results)
+    res.json(res.paginatedResult);
 })
 
 app.get('/products',paginatedResult(productData), (req,res) =>{
@@ -45,7 +45,8 @@ app.get('/products',paginatedResult(productData), (req,res) =>{
     // }}
     // results.results= productData.slice(startIndex,endIndex);
 
-    res.json(results)
+
+    res.json(res.paginatedResult)
 })
 
 app.listen(8080,(err)=>{
