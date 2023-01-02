@@ -1,59 +1,43 @@
-const express =require('express');
+const express = require("express");
 const app = express();
-const productData =require('./data/productData.json');
-const userData = require('./data/userData.json');
-const {paginatedResult} =require('./paginatedResult')
+const mongoose = require("mongoose");
+const usersRoute = require("./routes/userRoute");
+const productRoute = require("./routes/productRoute");
+const users = require("./users");
 
+mongoose.set("strictQuery", false);
+mongoose
+  .connect("mongodb://localhost/pagination")
+  .then(() => console.log("database connected successfully"))
+  .catch((err) => console.error("failed to connect to database", err));
 
-app.get('/users',paginatedResult(userData) ,(req,res) =>{
-    // const page =parseInt(req.query.page);
-    // const limit =parseInt(req.query.limit);
-    // startIndex=(page-1)*limit;
-    // endIndex = page*limit;
-    // const results ={}
-    // if(endIndex<userData.length){
-    // results.next={
-    //     page:page+1,
-    //     limit:limit
-    // }}
+const db = mongoose.connection;
 
-    // if(startIndex>0){
-    // results.previous={
-    //     page:page-1,
-    //     limit:limit
-    // }}
-    // results.results= userData.slice(startIndex,endIndex);
-    res.json(res.paginatedResult);
-})
+db.once("open", async () => {
+  if ((await users.count()) > 0) return;
+  console.log('hello you all after')
+  Promise.all([
+    users.create({ name: "user 1" }),
+    users.create({ name: "user 2" }),
+    users.create({ name: "user 3" }),
+    users.create({ name: "user 4" }),
+    users.create({ name: "user 5" }),
+    users.create({ name: "user 6" }),
+    users.create({ name: "user 7" }),
+    users.create({ name: "user 8" }),
+    users.create({ name: "user 9" }),
+    users.create({ name: "user 10" }),
+    users.create({ name: "user 11" }),
+    users.create({ name: "user 12" }),
+  ]).then(() => console.log("Added users"));
+});
+app.use("/users", usersRoute);
+app.use("/products", productRoute);
 
-app.get('/products',paginatedResult(productData), (req,res) =>{
-    // const page =parseInt(req.query.page);
-    // const limit =parseInt(req.query.limit);
-    // startIndex=(page-1)*limit;
-    // endIndex = page*limit;
-    // const results ={}
-    // if(endIndex<productData.length){
-    // results.next={
-    //     page:page+1,
-    //     limit:limit
-    // }}
-
-    // if(startIndex>0){
-    // results.previous={
-    //     page:page-1,
-    //     limit:limit
-    // }}
-    // results.results= productData.slice(startIndex,endIndex);
-
-
-    res.json(res.paginatedResult)
-})
-
-app.listen(8080,(err)=>{
-    if(err){
-        console.log('server connection failed');
-    }
-    else{
-        console.log('server connected successfully');
-    }
-})
+app.listen(8080, (err) => {
+  if (err) {
+    console.log("server connection failed");
+  } else {
+    console.log("server connected successfully");
+  }
+});
