@@ -1,1 +1,1 @@
-GET http://localhost:8080/products?page=2&limit=5
+GET http://localhost:8080/users?page=1&limit=14
